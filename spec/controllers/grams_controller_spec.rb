@@ -11,10 +11,8 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should allow a user to destroy grams" do
-      user = FactoryGirl.create(:user)
-      sign_in user
-
       p = FactoryGirl.create(:gram)
+      sign_in p.user
       delete :destroy, params: {id: p.id}
       expect(response).to redirect_to root_path
       p = Gram.find_by_id(p.id)
@@ -38,10 +36,8 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should allow users to successfully update grams" do
-      user = FactoryGirl.create(:user)
-      sign_in user
-
       p = FactoryGirl.create(:gram, message: "Initial Value")
+      sign_in p.user
       patch :update, params: { id: p.id, gram: { message: 'Changed' } }
 
       expect(response).to redirect_to root_path
@@ -58,10 +54,8 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should render the edit form with an http status of unprocessable_entity" do
-      user = FactoryGirl.create(:user)
-      sign_in user
-
       p = FactoryGirl.create(:gram, message: "Initial Value")
+      sign_in p.user
       patch :update, params: { id: p.id, gram: { message: '' } }
 
       expect(response).to have_http_status(:unprocessable_entity)
