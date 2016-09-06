@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe GramsController, type: :controller do
 
   describe "grams#destroy" do
-    it "should require users to be logged in" do
+    it "shouldn't let unauthenticated users destroy a gram" do
       p = FactoryGirl.create(:gram)
       delete :destroy, params: {id: p.id}
 
@@ -24,14 +24,23 @@ RSpec.describe GramsController, type: :controller do
     it "should return a 404 message if we cannot find a gram with the id that is specified" do
       user = FactoryGirl.create(:user)
       sign_in user
-      
+
       delete :destroy, params: { id: 'BAD_PARAM_ID'}
       expect(response).to have_http_status(:not_found)
     end
   end
 
   describe "grams#update" do
+    it "shouldn't let unauthenticated users create a gram" do
+      p = FactoryGirl.create(:gram)
+      patch :update, params: {id: p.id, gram: { message: "Hello" }}
+      expect(response).to redirect_to new_user_session_path
+    end
+
     it "should allow users to successfully update grams" do
+      user = FactoryGirl.create(:user)
+      sign_in user
+
       p = FactoryGirl.create(:gram, message: "Initial Value")
       patch :update, params: { id: p.id, gram: { message: 'Changed' } }
 
@@ -41,11 +50,17 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should have http 404 error if the gram cannot be found" do
+      user = FactoryGirl.create(:user)
+      sign_in user
+
       patch :update, params: { id: "BAD_PARAM_ID", gram: {message: 'Changed'} }
       expect(response).to have_http_status(:not_found)
     end
 
     it "should render the edit form with an http status of unprocessable_entity" do
+      user = FactoryGirl.create(:user)
+      sign_in user
+
       p = FactoryGirl.create(:gram, message: "Initial Value")
       patch :update, params: { id: p.id, gram: { message: '' } }
 
@@ -57,12 +72,18 @@ RSpec.describe GramsController, type: :controller do
 
   describe "grams#edit" do
     it "should successfully show the edit form if the gram is found" do
+      user = FactoryGirl.create(:user)
+      sign_in user
+
       gram = FactoryGirl.create(:gram)
       get :edit, params: { id: gram.id }
       expect(response).to have_http_status(:success)
     end
 
     it "should return a 404 error message if the gram is not found" do
+      user = FactoryGirl.create(:user)
+      sign_in user
+
       get :edit, params: { id: 'BAD_ID_PARAM' }
       expect(response).to have_http_status(:not_found)
     end
