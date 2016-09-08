@@ -34,6 +34,9 @@ gem 'rails_12factor', group: :production
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'simple_form'
 gem 'devise'
+gem 'carrierwave'
+gem 'figaro'
+gem 'carrierwave-aws'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

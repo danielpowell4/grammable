@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 20160906190857) do
 
   create_table "grams", force: :cascade do |t|
     t.text     "message"
+    t.string   "picture"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"

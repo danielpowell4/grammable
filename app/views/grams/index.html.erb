@@ -3,5 +3,6 @@
 <% @grams.each do |gram| %>
 
   <h4><%= gram.message %></h4>
-
+  <%= image_tag gram.picture, :class => 'img-responsive' %>
+  
 <% end %>
